@@ -48,14 +48,15 @@ export function determineDeviceType(params: {
         return diagonalInches > 9 ? 'tablet' : 'phone';
     }
     
-    // Foldable device detection: devices with a wide minimum dimension are treated as tablets
+    // Foldable device detection (Android only): devices with a wide minimum dimension are treated as tablets
     // Foldable devices (e.g., Galaxy Z Fold) have min dimension ~4"+ when unfolded
     // Regular phones have min dimension ~2.4-2.6"
-    if (minDimensionInches !== undefined && minDimensionInches >= foldableMinDimensionThresholdInches) {
+    if (platform !== 'ios' && minDimensionInches !== undefined && minDimensionInches >= foldableMinDimensionThresholdInches) {
         return 'tablet';
     }
     
-    // General check: devices with diagonal >= threshold are tablets
+    // Fallback: devices with diagonal >= threshold are tablets
+    // This handles regular Android/web tablets and any devices not caught above
     return diagonalInches >= tabletThresholdInches ? 'tablet' : 'phone';
 }
 
