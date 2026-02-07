@@ -9,6 +9,7 @@ This folder documents how Happy works internally, with a focus on protocol, back
 - backend-architecture.md: Internal backend structure, data flow, and key subsystems.
 - deployment.md: How to deploy the backend and required infrastructure.
 - cli-architecture.md: CLI and daemon architecture and how they interact with the server.
+- multi-machine-plan.md: Plan for multi-machine connection and switching in the mobile app.
 
 ## Conventions
 - Paths and field names reflect the current implementation in `packages/happy-server`.
