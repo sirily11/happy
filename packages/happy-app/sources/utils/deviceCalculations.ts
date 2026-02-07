@@ -37,8 +37,10 @@ export function determineDeviceType(params: {
     platform: string;
     isPad?: boolean;
     tabletThresholdInches?: number; // Default is 9 inches
+    minDimensionInches?: number; // Minimum of width/height in inches, used for foldable detection
+    foldableMinDimensionThresholdInches?: number; // Default is 3.5 inches
 }): 'phone' | 'tablet' {
-    const { diagonalInches, platform, isPad, tabletThresholdInches = 9 } = params;
+    const { diagonalInches, platform, isPad, tabletThresholdInches = 9, minDimensionInches, foldableMinDimensionThresholdInches = 3.5 } = params;
     
     // iOS-specific check: iPads with diagonal > 9" are tablets
     // This treats iPad Mini (7.9-8.3") as a phone
@@ -46,8 +48,14 @@ export function determineDeviceType(params: {
         return diagonalInches > 9 ? 'tablet' : 'phone';
     }
     
+    // Foldable device detection: devices with a wide minimum dimension are treated as tablets
+    // Foldable devices (e.g., Galaxy Z Fold) have min dimension ~4"+ when unfolded
+    // Regular phones have min dimension ~2.4-2.6"
+    if (minDimensionInches !== undefined && minDimensionInches >= foldableMinDimensionThresholdInches) {
+        return 'tablet';
+    }
+    
     // General check: devices with diagonal >= threshold are tablets
-    // 9" threshold ensures foldables (typically 7-8") are treated as phones
     return diagonalInches >= tabletThresholdInches ? 'tablet' : 'phone';
 }
 

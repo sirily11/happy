@@ -33,7 +33,8 @@ export function getDeviceType(): 'phone' | 'tablet' {
         diagonalInches: dimensions.diagonalInches,
         platform: Platform.OS,
         // @ts-ignore - isPad is not in the type definitions but exists at runtime on iOS
-        isPad: Platform.OS === 'ios' ? Platform.isPad : false
+        isPad: Platform.OS === 'ios' ? Platform.isPad : false,
+        minDimensionInches: Math.min(dimensions.widthInches, dimensions.heightInches)
     });
 }
 
@@ -52,7 +53,8 @@ export function useDeviceType(): 'phone' | 'tablet' {
             diagonalInches: dimensions.diagonalInches,
             platform: Platform.OS,
             // @ts-ignore - isPad is not in the type definitions but exists at runtime on iOS
-            isPad: Platform.OS === 'ios' ? Platform.isPad : false
+            isPad: Platform.OS === 'ios' ? Platform.isPad : false,
+            minDimensionInches: Math.min(dimensions.widthInches, dimensions.heightInches)
         });
     }, [width, height]);
 }
