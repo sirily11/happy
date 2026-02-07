@@ -212,23 +212,38 @@ describe('responsive utilities', () => {
 
             const deviceType = determineDeviceType({
                 diagonalInches: dimensions.diagonalInches,
-                platform: 'android'
+                platform: 'android',
+                minDimensionInches: Math.min(dimensions.widthInches, dimensions.heightInches)
             });
 
             // Unfolded state diagonal is around 6.9 inches
             expect(dimensions.diagonalInches).toBeCloseTo(6.944, 2);
-            // With 9" threshold, it's classified as phone
-            expect(deviceType).toBe('phone');
+            // Min dimension is ~4.2", which exceeds foldable threshold (3.5")
+            expect(Math.min(dimensions.widthInches, dimensions.heightInches)).toBeCloseTo(4.206, 2);
+            // With foldable detection, unfolded foldables are classified as tablets
+            expect(deviceType).toBe('tablet');
         });
 
-        it('should identify Galaxy Z Fold as phone when unfolded', () => {
-            // Galaxy Z Fold5 unfolded: 7.6" diagonal screen
+        it('should identify Galaxy Z Fold as tablet when unfolded', () => {
+            // Galaxy Z Fold5 unfolded: 7.6" diagonal screen, min dimension ~4.2"
             const deviceType = determineDeviceType({
                 diagonalInches: 7.6,
-                platform: 'android'
+                platform: 'android',
+                minDimensionInches: 4.2
             });
 
-            expect(deviceType).toBe('phone'); // Foldables are phones
+            expect(deviceType).toBe('tablet'); // Foldables unfolded are tablets
+        });
+
+        it('should identify Galaxy Z Fold as phone when folded', () => {
+            // Galaxy Z Fold5 folded front screen: ~6.2" diagonal, narrow width ~2.3"
+            const deviceType = determineDeviceType({
+                diagonalInches: 6.2,
+                platform: 'android',
+                minDimensionInches: 2.3
+            });
+
+            expect(deviceType).toBe('phone'); // Foldables folded are phones
         });
     });
 
